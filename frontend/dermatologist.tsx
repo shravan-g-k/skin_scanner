@@ -134,7 +134,7 @@ export const AnalysisResults: React.FC<AnalysisResultsProps> = ({ results, isLoa
                 Schedule an appointment with a board-certified dermatologist for proper diagnosis and treatment.
               </p>
               <Button variant="outline" size="sm" className="w-full">
-                Book Appointment
+                See nearby dermatologist clinics
               </Button>
             </div>
             <div className="p-4 border rounded-lg">
