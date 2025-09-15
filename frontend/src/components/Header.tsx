@@ -20,7 +20,7 @@ export const Header: React.FC = () => {
           <div className="flex items-center gap-4">
             <div className="hidden md:flex items-center gap-2 text-sm text-muted-foreground">
               <Shield className="h-4 w-4" />
-              <span>HIPAA Compliant</span>
+             
             </div>
             <Button variant="outline" size="sm">
               How It Works
