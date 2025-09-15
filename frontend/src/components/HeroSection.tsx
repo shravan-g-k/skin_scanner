@@ -60,7 +60,7 @@ export const HeroSection: React.FC = () => {
             </div>
 
             <div className="p-4 bg-warning/10 border border-warning/20 rounded-lg">
-              <p className="text-sm text-warning-foreground">
+              <p className="text-sm text-warning-foreground/120">
                 <strong>Medical Disclaimer:</strong> This tool provides preliminary analysis only. 
                 Always consult qualified healthcare professionals for diagnosis and treatment.
               </p>

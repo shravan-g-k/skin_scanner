@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -100,17 +101,13 @@ export const AnalysisResults: React.FC<AnalysisResultsProps> = ({ results, isLoa
           <div className="flex items-start gap-3">
             <AlertTriangle className="h-6 w-6 text-warning flex-shrink-0 mt-1" />
             <div className="space-y-3">
-              <h3 className="font-semibold text-warning-foreground">Important Medical Disclaimer</h3>
-              <p className="text-sm text-warning-foreground/80">
+              <h3 className="font-semibold text-warning-foreground/120">Important Medical Disclaimer</h3>
+              <p className="text-sm text-warning-foreground/120">
                 This AI analysis is for educational and informational purposes only. It should not be used as a substitute 
                 for professional medical advice, diagnosis, or treatment. Always seek the advice of qualified healthcare 
                 providers with any questions you may have regarding medical conditions.
               </p>
               <div className="flex gap-3 pt-2">
-                <Button variant="outline" size="sm">
-                  <ExternalLink className="h-4 w-4 mr-2" />
-                  Find Dermatologists
-                </Button>
                 <Button variant="outline" size="sm">
                   <Download className="h-4 w-4 mr-2" />
                   Download Report
@@ -134,16 +131,7 @@ export const AnalysisResults: React.FC<AnalysisResultsProps> = ({ results, isLoa
                 Schedule an appointment with a board-certified dermatologist for proper diagnosis and treatment.
               </p>
               <Button variant="outline" size="sm" className="w-full">
-                Book Appointment
-              </Button>
-            </div>
-            <div className="p-4 border rounded-lg">
-              <h4 className="font-semibold mb-2">Monitor Changes</h4>
-              <p className="text-sm text-muted-foreground mb-3">
-                Keep track of any changes in size, color, or texture of the skin condition over time.
-              </p>
-              <Button variant="outline" size="sm" className="w-full">
-                Set Reminder
+                Find nearby dermatologist clinics
               </Button>
             </div>
           </div>

@@ -123,10 +123,6 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onImageUpload }) => {
                 </p>
               </div>
               <div className="flex gap-2 justify-center pt-2">
-                <Button variant="outline" size="sm">
-                  <Camera className="h-4 w-4 mr-2" />
-                  Take Photo
-                </Button>
                 <Button size="sm">
                   <Upload className="h-4 w-4 mr-2" />
                   Choose File
@@ -137,7 +133,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onImageUpload }) => {
         </div>
 
         <div className="mt-6 p-4 bg-warning/10 rounded-lg">
-          <p className="text-sm text-warning-foreground">
+          <p className="text-sm text-warning-foreground/120">
             <strong>Important:</strong> This AI analysis is for informational purposes only. 
             Always consult a qualified dermatologist for professional medical advice and diagnosis.
           </p>
