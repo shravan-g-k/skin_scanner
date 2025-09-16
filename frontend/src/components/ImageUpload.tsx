@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Upload, Camera, X, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -12,8 +12,11 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onImageUpload }) => {
   const [dragActive, setDragActive] = useState(false);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [fileName, setFileName] = useState<string>('');
+  const [isCameraOpen, setIsCameraOpen] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // Handle drag & drop
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -28,7 +31,6 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onImageUpload }) => {
     e.preventDefault();
     e.stopPropagation();
     setDragActive(false);
-    
     const files = e.dataTransfer.files;
     if (files && files[0]) {
       handleFile(files[0]);
@@ -62,6 +64,62 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onImageUpload }) => {
     }
   };
 
+  // Camera logic
+  useEffect(() => {
+    if (isCameraOpen && videoRef.current) {
+      navigator.mediaDevices
+        .getUserMedia({ video: true })
+        .then((stream) => {
+          if (videoRef.current) {
+            videoRef.current.srcObject = stream;
+          }
+        })
+        .catch((err) => {
+          console.error("Camera access denied ❌", err);
+          setIsCameraOpen(false);
+        });
+    }
+  }, [isCameraOpen]);
+
+  const capturePhoto = () => {
+    const canvas = document.createElement("canvas");
+    const video = videoRef.current;
+    if (video) {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const dataUrl = canvas.toDataURL("image/png");
+        setUploadedImage(dataUrl);
+        setFileName("captured_photo.png");
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const file = new File([blob], "captured_photo.png", { type: "image/png" });
+            onImageUpload(file);
+          }
+        }, "image/png");
+        setIsCameraOpen(false);
+
+        // stop camera
+        if (video.srcObject) {
+          (video.srcObject as MediaStream)
+            .getTracks()
+            .forEach((track) => track.stop());
+        }
+      }
+    }
+  };
+
+  const closeCamera = () => {
+    setIsCameraOpen(false);
+    if (videoRef.current?.srcObject) {
+      (videoRef.current.srcObject as MediaStream)
+        .getTracks()
+        .forEach((track) => track.stop());
+    }
+  };
+
   return (
     <Card className="w-full max-w-2xl mx-auto shadow-card">
       <CardContent className="p-8">
@@ -76,12 +134,13 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onImageUpload }) => {
           onDragOver={handleDrag}
           onDrop={handleDrop}
         >
+          {/* Hidden file input (only for Choose File) */}
           <input
             ref={fileInputRef}
             type="file"
             accept="image/*"
             onChange={handleFileInput}
-            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+            className="hidden"
           />
 
           {uploadedImage ? (
@@ -123,7 +182,11 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onImageUpload }) => {
                 </p>
               </div>
               <div className="flex gap-2 justify-center pt-2">
-                <Button size="sm">
+                <Button variant="outline" size="sm" onClick={() => setIsCameraOpen(true)}>
+                  <Camera className="h-4 w-4 mr-2" />
+                  Take Photo
+                </Button>
+                <Button size="sm" onClick={() => fileInputRef.current?.click()}>
                   <Upload className="h-4 w-4 mr-2" />
                   Choose File
                 </Button>
@@ -132,8 +195,21 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({ onImageUpload }) => {
           )}
         </div>
 
+        {/* Camera Modal */}
+        {isCameraOpen && (
+          <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+            <div className="bg-white p-4 rounded-lg shadow-lg space-y-4 max-w-md w-full">
+              <video ref={videoRef} autoPlay playsInline className="w-full rounded-lg" />
+              <div className="flex justify-between gap-2">
+                <Button onClick={capturePhoto} className="flex-1">Capture</Button>
+                <Button variant="destructive" onClick={closeCamera} className="flex-1">Cancel</Button>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="mt-6 p-4 bg-warning/10 rounded-lg">
-          <p className="text-sm text-warning-foreground/120">
+          <p className="text-sm text-warning-foreground" style={{color:'black'}}>
             <strong>Important:</strong> This AI analysis is for informational purposes only. 
             Always consult a qualified dermatologist for professional medical advice and diagnosis.
           </p>
