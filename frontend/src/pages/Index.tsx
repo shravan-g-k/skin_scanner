@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Header } from '@/components/Header';
 import { HeroSection } from '@/components/HeroSection';
 import { ImageUpload } from '@/components/ImageUpload';
@@ -15,12 +15,13 @@ const Index = () => {
   const [analysisResults, setAnalysisResults] = useState<AnalysisResult[] | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
+  const imageUploadRef = useRef<HTMLDivElement>(null); // ✅ added ref
+
   const handleImageUpload = async (file: File) => {
     setIsAnalyzing(true);
     
     // Simulate AI analysis delay
     setTimeout(() => {
-      // Mock results for demo purposes
       const mockResults: AnalysisResult[] = [
         {
           condition: "Seborrheic Keratosis",
@@ -41,10 +42,14 @@ const Index = () => {
     }, 3000);
   };
 
+  const scrollToImageUpload = () => {
+    imageUploadRef.current?.scrollIntoView({ behavior: 'smooth' }); // ✅ scroll function
+  };
+
   return (
     <div className="min-h-screen bg-gradient-subtle">
       <Header />
-      <HeroSection />
+      <HeroSection onStartAnalysisClick={scrollToImageUpload} /> {/* ✅ pass function */}
       
       <main className="container mx-auto px-4 py-16 space-y-12">
         <div className="text-center space-y-4 max-w-3xl mx-auto">
@@ -55,7 +60,9 @@ const Index = () => {
           </p>
         </div>
 
-        <ImageUpload onImageUpload={handleImageUpload} />
+        <div ref={imageUploadRef}> {/* ✅ attach ref here */}
+          <ImageUpload onImageUpload={handleImageUpload} />
+        </div>
 
         {(isAnalyzing || analysisResults) && (
           <div className="pt-8">

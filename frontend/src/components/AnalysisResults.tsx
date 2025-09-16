@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { AlertTriangle, CheckCircle, Info, Download, ExternalLink } from 'lucide-react';
+import { jsPDF } from 'jspdf';
 
 interface AnalysisResult {
   condition: string;
@@ -50,6 +51,84 @@ export const AnalysisResults: React.FC<AnalysisResultsProps> = ({ results, isLoa
       default: return <Info className="h-4 w-4" />;
     }
   };
+
+const downloadPDF = () => {
+  if (!results || results.length === 0) return;
+
+  const result = results[0]; // 👈 pick the first result for the PDF
+  const doc = new jsPDF();
+  let y = 20;
+
+  doc.setFontSize(20);
+  doc.setTextColor(24, 90, 157);
+  doc.setFont("helvetica", "bold");
+  doc.text("Skin Condition Analysis Report", 105, y, { align: "center" });
+  y += 20;
+
+  doc.setFontSize(14);
+  doc.setTextColor(24, 90, 157);
+  doc.text("Condition:", 20, y);
+  y += 8;
+
+  doc.setFontSize(12);
+  doc.setTextColor(0, 0, 0);
+  doc.text(result.condition, 25, y);
+  y += 15;
+
+  doc.setFontSize(14);
+  doc.setTextColor(24, 90, 157);
+  doc.text("Description:", 20, y);
+  y += 8;
+
+  doc.setFontSize(12);
+  doc.setTextColor(0, 0, 0);
+  const descText = doc.splitTextToSize(result.description, 170);
+  doc.text(descText, 25, y);
+  y += descText.length * 7 + 10;
+
+  // (Optional) if you later add symptoms/suggestions back to your result object
+  if ((result as any).symptoms) {
+    doc.setFontSize(14);
+    doc.setTextColor(24, 90, 157);
+    doc.text("Symptoms:", 20, y);
+    y += 8;
+
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+    (result as any).symptoms.forEach((s: string) => {
+      const symptomText = doc.splitTextToSize(`- ${s}`, 160);
+      doc.text(symptomText, 25, y);
+      y += symptomText.length * 7;
+    });
+    y += 10;
+  }
+
+  if ((result as any).suggestions) {
+    doc.setFontSize(14);
+    doc.setTextColor(24, 90, 157);
+    doc.text("Suggestions:", 20, y);
+    y += 8;
+
+    doc.setFontSize(12);
+    doc.setTextColor(0, 0, 0);
+    (result as any).suggestions.forEach((s: string) => {
+      const suggestionText = doc.splitTextToSize(`- ${s}`, 160);
+      doc.text(suggestionText, 25, y);
+      y += suggestionText.length * 7;
+    });
+  }
+
+  y += 15;
+  doc.setFontSize(10);
+  doc.setTextColor(150, 150, 150);
+  doc.text("⚠ This is an AI-generated report, not medical advice.", 20, y);
+
+  doc.save("Skin-Condition-Report.pdf");
+};
+
+  const scrollToAnalyzer = () => {
+    document.getElementById('analyzer').scrollIntoView({ behavior: 'smooth' });
+  };
 
   return (
     <div className="w-full max-w-4xl mx-auto space-y-6">
@@ -101,14 +180,14 @@ export const AnalysisResults: React.FC<AnalysisResultsProps> = ({ results, isLoa
           <div className="flex items-start gap-3">
             <AlertTriangle className="h-6 w-6 text-warning flex-shrink-0 mt-1" />
             <div className="space-y-3">
-              <h3 className="font-semibold text-warning-foreground/120">Important Medical Disclaimer</h3>
-              <p className="text-sm text-warning-foreground/120">
+              <h3 className="font-semibold text-warning-foreground" style={{color:'black'}}>Important Medical Disclaimer</h3>
+              <p className="text-sm text-warning-foreground/80" style={{color:'black'}}>
                 This AI analysis is for educational and informational purposes only. It should not be used as a substitute 
                 for professional medical advice, diagnosis, or treatment. Always seek the advice of qualified healthcare 
                 providers with any questions you may have regarding medical conditions.
               </p>
               <div className="flex gap-3 pt-2">
-                <Button variant="outline" size="sm">
+                <Button variant="outline" size="sm" onClick={downloadPDF}>
                   <Download className="h-4 w-4 mr-2" />
                   Download Report
                 </Button>
