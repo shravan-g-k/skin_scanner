@@ -4,7 +4,11 @@ import { Badge } from '@/components/ui/badge';
 import { CheckCircle, Clock, Shield, Zap } from 'lucide-react';
 import heroImage from '@/assets/hero-medical.jpg';
 
-export const HeroSection: React.FC = () => {
+interface HeroSectionProps {
+  onStartAnalysisClick?: () => void; // ✅ accept scroll function as prop
+}
+
+export const HeroSection: React.FC<HeroSectionProps> = ({ onStartAnalysisClick }) => {
   return (
     <section className="relative py-20 bg-gradient-to-br from-background to-medical-light overflow-hidden">
       <div className="container mx-auto px-4">
@@ -51,7 +55,11 @@ export const HeroSection: React.FC = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" className="bg-gradient-to-r from-primary to-accent hover:opacity-90">
+              <Button 
+                size="lg" 
+                className="bg-gradient-to-r from-primary to-accent hover:opacity-90"
+                onClick={onStartAnalysisClick} // ✅ call scroll function
+              >
                 Start Analysis
               </Button>
               <Button variant="outline" size="lg">
@@ -60,7 +68,7 @@ export const HeroSection: React.FC = () => {
             </div>
 
             <div className="p-4 bg-warning/10 border border-warning/20 rounded-lg">
-              <p className="text-sm text-warning-foreground">
+              <p className="text-sm text-warning-foreground" style={{color:'black'}}>
                 <strong>Medical Disclaimer:</strong> This tool provides preliminary analysis only. 
                 Always consult qualified healthcare professionals for diagnosis and treatment.
               </p>
