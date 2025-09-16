@@ -6,50 +6,63 @@ import { AnalysisResults } from '@/components/AnalysisResults';
 
 interface AnalysisResult {
   condition: string;
-  confidence: number;
   severity: 'low' | 'medium' | 'high';
   description: string;
+  symptoms?: string[];
+  suggestions?: string[];
 }
 
 const Index = () => {
   const [analysisResults, setAnalysisResults] = useState<AnalysisResult[] | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
 
-  const imageUploadRef = useRef<HTMLDivElement>(null); // ✅ added ref
+  const imageUploadRef = useRef<HTMLDivElement>(null);
+
+  // Helper: Convert file to base64
+  const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve((reader.result as string).split(",")[1]);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
 
   const handleImageUpload = async (file: File) => {
     setIsAnalyzing(true);
-    
-    // Simulate AI analysis delay
-    setTimeout(() => {
-      const mockResults: AnalysisResult[] = [
-        {
-          condition: "Seborrheic Keratosis",
-          confidence: 87,
-          severity: 'low',
-          description: "A common, benign skin growth that appears as brown, black, or tan patches. Usually harmless but should be monitored for changes."
-        },
-        {
-          condition: "Common Mole (Nevus)",
-          confidence: 76,
-          severity: 'low',
-          description: "A benign pigmented lesion. Most moles are harmless, but regular monitoring is recommended for any changes in size, color, or shape."
-        }
-      ];
-      
-      setAnalysisResults(mockResults);
-      setIsAnalyzing(false);
-    }, 3000);
+    try {
+      const base64Image = await fileToBase64(file);
+      const mimeType = file.type;
+      const response = await fetch("http://localhost:3000/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ base64Image, mimeType })
+      });
+      if (!response.ok) throw new Error("Failed to analyze image");
+      const data = await response.json();
+      const mappedResult: AnalysisResult = {
+        condition: data.conditionName,
+        description: data.description,
+        symptoms: data.symptoms,
+        suggestions: data.suggestions,
+        severity: data.severity, // Now expects severity from backend
+      };
+      setAnalysisResults([mappedResult]);
+    } catch (err) {
+      setAnalysisResults(null);
+      alert("Failed to analyze image. Please try again.");
+    }
+    setIsAnalyzing(false);
   };
 
   const scrollToImageUpload = () => {
-    imageUploadRef.current?.scrollIntoView({ behavior: 'smooth' }); // ✅ scroll function
+    imageUploadRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
     <div className="min-h-screen bg-gradient-subtle">
       <Header />
-      <HeroSection onStartAnalysisClick={scrollToImageUpload} /> {/* ✅ pass function */}
+      <HeroSection onStartAnalysisClick={scrollToImageUpload} />
       
       <main className="container mx-auto px-4 py-16 space-y-12">
         <div className="text-center space-y-4 max-w-3xl mx-auto">
@@ -60,7 +73,7 @@ const Index = () => {
           </p>
         </div>
 
-        <div ref={imageUploadRef}> {/* ✅ attach ref here */}
+        <div ref={imageUploadRef}>
           <ImageUpload onImageUpload={handleImageUpload} />
         </div>
 

@@ -4,14 +4,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { AlertTriangle, CheckCircle, Info, Download, ExternalLink } from 'lucide-react';
+import { AlertTriangle, CheckCircle, Info, Download, ListChecks, Lightbulb } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 
 interface AnalysisResult {
   condition: string;
-  confidence: number;
   severity: 'low' | 'medium' | 'high';
   description: string;
+  symptoms?: string[];
+  suggestions?: string[];
 }
 
 interface AnalysisResultsProps {
@@ -52,127 +53,116 @@ export const AnalysisResults: React.FC<AnalysisResultsProps> = ({ results, isLoa
     }
   };
 
-const downloadPDF = () => {
-  if (!results || results.length === 0) return;
-
-  const result = results[0]; // 👈 pick the first result for the PDF
-  const doc = new jsPDF();
-  let y = 20;
-
-  doc.setFontSize(20);
-  doc.setTextColor(24, 90, 157);
-  doc.setFont("helvetica", "bold");
-  doc.text("Skin Condition Analysis Report", 105, y, { align: "center" });
-  y += 20;
-
-  doc.setFontSize(14);
-  doc.setTextColor(24, 90, 157);
-  doc.text("Condition:", 20, y);
-  y += 8;
-
-  doc.setFontSize(12);
-  doc.setTextColor(0, 0, 0);
-  doc.text(result.condition, 25, y);
-  y += 15;
-
-  doc.setFontSize(14);
-  doc.setTextColor(24, 90, 157);
-  doc.text("Description:", 20, y);
-  y += 8;
-
-  doc.setFontSize(12);
-  doc.setTextColor(0, 0, 0);
-  const descText = doc.splitTextToSize(result.description, 170);
-  doc.text(descText, 25, y);
-  y += descText.length * 7 + 10;
-
-  // (Optional) if you later add symptoms/suggestions back to your result object
-  if ((result as any).symptoms) {
+  const downloadPDF = () => {
+    if (!results || results.length === 0) return;
+    const result = results[0];
+    const doc = new jsPDF();
+    let y = 20;
+    doc.setFontSize(20);
+    doc.setTextColor(24, 90, 157);
+    doc.setFont("helvetica", "bold");
+    doc.text("Skin Condition Analysis Report", 105, y, { align: "center" });
+    y += 20;
     doc.setFontSize(14);
     doc.setTextColor(24, 90, 157);
-    doc.text("Symptoms:", 20, y);
+    doc.text("Condition:", 20, y);
     y += 8;
-
     doc.setFontSize(12);
     doc.setTextColor(0, 0, 0);
-    (result as any).symptoms.forEach((s: string) => {
-      const symptomText = doc.splitTextToSize(`- ${s}`, 160);
-      doc.text(symptomText, 25, y);
-      y += symptomText.length * 7;
-    });
-    y += 10;
-  }
-
-  if ((result as any).suggestions) {
+    doc.text(result.condition, 25, y);
+    y += 15;
     doc.setFontSize(14);
     doc.setTextColor(24, 90, 157);
-    doc.text("Suggestions:", 20, y);
+    doc.text("Description:", 20, y);
     y += 8;
-
     doc.setFontSize(12);
     doc.setTextColor(0, 0, 0);
-    (result as any).suggestions.forEach((s: string) => {
-      const suggestionText = doc.splitTextToSize(`- ${s}`, 160);
-      doc.text(suggestionText, 25, y);
-      y += suggestionText.length * 7;
-    });
-  }
-
-  y += 15;
-  doc.setFontSize(10);
-  doc.setTextColor(150, 150, 150);
-  doc.text("⚠ This is an AI-generated report, not medical advice.", 20, y);
-
-  doc.save("Skin-Condition-Report.pdf");
-};
-
-  const scrollToAnalyzer = () => {
-    document.getElementById('analyzer').scrollIntoView({ behavior: 'smooth' });
-  };
+    const descText = doc.splitTextToSize(result.description, 170);
+    doc.text(descText, 25, y);
+    y += descText.length * 7 + 10;
+    if (result.symptoms && result.symptoms.length > 0) {
+      doc.setFontSize(14);
+      doc.setTextColor(24, 90, 157);
+      doc.text("Symptoms:", 20, y);
+      y += 8;
+      doc.setFontSize(12);
+      doc.setTextColor(0, 0, 0);
+      result.symptoms.forEach((s: string) => {
+        const symptomText = doc.splitTextToSize(`- ${s}`, 160);
+        doc.text(symptomText, 25, y);
+        y += symptomText.length * 7;
+      });
+      y += 10;
+    }
+    if (result.suggestions && result.suggestions.length > 0) {
+      doc.setFontSize(14);
+      doc.setTextColor(24, 90, 157);
+      doc.text("Suggestions:", 20, y);
+      y += 8;
+      doc.setFontSize(12);
+      doc.setTextColor(0, 0, 0);
+      result.suggestions.forEach((s: string) => {
+        const suggestionText = doc.splitTextToSize(`- ${s}`, 160);
+        doc.text(suggestionText, 25, y);
+        y += suggestionText.length * 7;
+      });
+    }
+    y += 15;
+    doc.setFontSize(10);
+    doc.setTextColor(150, 150, 150);
+    doc.text("⚠ This is an AI-generated report, not medical advice.", 20, y);
+    doc.save("Skin-Condition-Report.pdf");
+  };
 
   return (
     <div className="w-full max-w-4xl mx-auto space-y-6">
-      {/* Main Results */}
-      <Card className="shadow-card">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <div className="p-2 bg-primary/10 rounded-lg">
-              <CheckCircle className="h-5 w-5 text-primary" />
-            </div>
-            AI Analysis Results
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {results.map((result, index) => (
-            <div key={index} className="border rounded-lg p-6 space-y-4">
-              <div className="flex items-start justify-between">
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <h3 className="text-lg font-semibold">{result.condition}</h3>
-                    <Badge variant={getSeverityColor(result.severity)}>
-                      {getSeverityIcon(result.severity)}
-                      {result.severity} risk
-                    </Badge>
-                  </div>
-                  <p className="text-muted-foreground">{result.description}</p>
-                </div>
-                <div className="text-right">
-                  <div className="text-2xl font-bold text-primary">{result.confidence}%</div>
-                  <div className="text-sm text-muted-foreground">confidence</div>
-                </div>
+      {results.map((result, index) => (
+        <Card className="shadow-card" key={index}>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <div className="p-2 bg-primary/10 rounded-lg">
+                {getSeverityIcon(result.severity)}
               </div>
-              
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span>Confidence Level</span>
-                  <span>{result.confidence}%</span>
-                </div>
-                <Progress value={result.confidence} className="h-2" />
-              </div>
+              <span className="text-xl font-bold">{result.condition}</span>
+              <Badge variant={getSeverityColor(result.severity)} className="ml-2">
+                {result.severity} risk
+              </Badge>
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div>
+              <h4 className="font-semibold mb-1">Description</h4>
+              <p className="text-muted-foreground mb-2">{result.description}</p>
             </div>
-          ))}
-        </CardContent>
-      </Card>
+            {result.symptoms && result.symptoms.length > 0 && (
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <ListChecks className="h-4 w-4 text-primary" />
+                  <h4 className="font-semibold">Symptoms</h4>
+                </div>
+                <ul className="list-disc list-inside ml-2 text-sm text-muted-foreground">
+                  {result.symptoms.map((symptom, i) => (
+                    <li key={i}>{symptom}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {result.suggestions && result.suggestions.length > 0 && (
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <Lightbulb className="h-4 w-4 text-primary" />
+                  <h4 className="font-semibold">Suggestions</h4>
+                </div>
+                <ul className="list-disc list-inside ml-2 text-sm text-muted-foreground">
+                  {result.suggestions.map((suggestion, i) => (
+                    <li key={i}>{suggestion}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      ))}
 
       {/* Medical Disclaimer */}
       <Card className="border-warning/20 bg-warning/5 shadow-card">
