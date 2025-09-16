@@ -29,8 +29,13 @@ const analysisSchema = {
       description:
         "A list of general, non-prescriptive suggestions for next steps. This MUST start with a strong recommendation to consult a qualified healthcare professional.",
     },
+    severity: {
+      type: Type.STRING,
+      description: "Severity of the condition: low, medium, or high. Always return one of these three values.",
+      enum: ["low", "medium", "high"]
+    },
   },
-  required: ["conditionName", "description", "symptoms", "suggestions"],
+  required: ["conditionName", "description", "symptoms", "suggestions", "severity"],
 };
 
 const analyzeSkinCondition = async (base64Image, mimeType) => {
@@ -39,7 +44,8 @@ const analyzeSkinCondition = async (base64Image, mimeType) => {
 2. A clear, concise description of what the condition is.
 3. A list of typical symptoms associated with this condition.
 4. A list of general, non-prescriptive suggestions for next steps.
-IMPORTANT: Your response MUST NOT be considered medical advice. Start the suggestions with a strong recommendation to consult a qualified healthcare professional or dermatologist for an accurate diagnosis and treatment plan. If the image is not clear, or does not appear to show a skin condition, respond with an analysis that indicates this.`;
+5. A severity field (low, medium, or high) that reflects the risk or urgency of the condition.
+IMPORTANT: Your response MUST NOT be considered medical advice. Start the suggestions with a strong recommendation to consult a qualified healthcare professional or dermatologist for an accurate diagnosis and treatment plan. If the image is not clear, or does not appear to show a skin condition, respond with an analysis that indicates this. The severity field must always be one of: low, medium, or high.`;
 
   const imagePart = {
     inlineData: {
