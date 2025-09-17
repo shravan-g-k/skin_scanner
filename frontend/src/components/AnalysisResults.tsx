@@ -193,13 +193,13 @@ export const AnalysisResults: React.FC<AnalysisResultsProps> = ({ results, isLoa
           <CardTitle>Recommended Next Steps</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="mx-auto">
             <div className="p-4 border rounded-lg">
               <h4 className="font-semibold mb-2">Consult a Professional</h4>
               <p className="text-sm text-muted-foreground mb-3">
                 Schedule an appointment with a board-certified dermatologist for proper diagnosis and treatment.
               </p>
-              <Button variant="outline" size="sm" className="w-full">
+              <Button variant="outline" size="lg" className="w-full">
                 Find nearby dermatologist clinics
               </Button>
             </div>
