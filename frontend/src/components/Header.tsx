@@ -12,7 +12,7 @@ export const Header: React.FC = () => {
               <Stethoscope className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h1 className="text-xl font-bold">DermaAI</h1>
+              <h1 className="text-xl font-bold">Skini</h1>
               <p className="text-sm text-muted-foreground">AI-Powered Skin Analysis</p>
             </div>
           </div>
