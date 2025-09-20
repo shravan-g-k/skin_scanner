@@ -1,6 +1,7 @@
 import React from 'react';
 import { Shield, Stethoscope } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Link } from 'react-router-dom';
 
 export const Header: React.FC = () => {
   return (
@@ -18,9 +19,11 @@ export const Header: React.FC = () => {
           </div>
           
           <div className="flex items-center gap-4">
-            <Button variant="outline" size="sm">
+            <Link to="/how-it-works">
+            <Button variant="outline" size="sm" >
               How It Works
             </Button>
+            </Link>
           </div>
         </div>
       </div>
