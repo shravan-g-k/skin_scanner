@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-const AISkinScannerInfo = () => {
+const InfoPage = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [activeFeature, setActiveFeature] = useState(0);
 
@@ -258,4 +258,4 @@ const AISkinScannerInfo = () => {
   );
 };
 
-export default AISkinScannerInfo;
+export default InfoPage;
