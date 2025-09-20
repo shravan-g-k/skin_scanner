@@ -20,27 +20,27 @@ const InfoPage = () => {
   const features = [
     {
       title: "AI-Powered Analysis",
-      description: "learning algorithms analyze skin patterns, texture, and pigmentation ",
+      description: "Learning algorithms analyze skin patterns, texture, and pigmentation.",
       icon: "🧠",
       details: ["Real-time processing"]
     },
     {
-      title: "fast Results",
-      description: "Get comprehensive skin analysis in minutes with detailed insights ",
+      title: "Fast Results",
+      description: "Get comprehensive skin analysis in minutes with detailed insights.",
       icon: "⚡",
-      details: [ "Detailed reports"]
+      details: ["Detailed reports"]
     },
     {
-      title: "pdf download",
-      description: "available in pdf form",
+      title: "PDF Download",
+      description: "Download your analysis as a PDF report.",
+      icon: "📄",
+      details: ["Easily accessible"]
+    },
+    {
+      title: "Find Dermatologists",
+      description: "Locate a dermatologist near you.",
       icon: "👩‍⚕️",
-      details: [ "easyily available" ]
-    },
-    {
-      title: "find dermatologists ",
-      description: "find your dermatologist ",
-      icon: "🔒",
-      details: ["Local processing"]
+      details: ["Local recommendations"]
     }
   ];
 
