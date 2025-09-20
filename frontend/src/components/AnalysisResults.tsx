@@ -7,7 +7,7 @@ import { Progress } from '@/components/ui/progress';
 import { AlertTriangle, CheckCircle, Info, Download, ListChecks, Lightbulb } from 'lucide-react';
 import { jsPDF } from 'jspdf';
 
-interface AnalysisResult {
+export interface AnalysisResult {
   condition: string;
   severity: 'low' | 'medium' | 'high';
   description: string;
@@ -209,3 +209,4 @@ export const AnalysisResults: React.FC<AnalysisResultsProps> = ({ results, isLoa
     </div>
   );
 };
+
