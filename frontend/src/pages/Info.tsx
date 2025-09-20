@@ -20,27 +20,27 @@ const AISkinScannerInfo = () => {
   const features = [
     {
       title: "AI-Powered Analysis",
-      description: "Advanced deep learning algorithms analyze skin patterns, texture, and pigmentation with clinical-grade accuracy",
+      description: "learning algorithms analyze skin patterns, texture, and pigmentation ",
       icon: "🧠",
-      details: ["95% accuracy rate", "Trained on 1M+ images", "Real-time processing"]
+      details: ["Real-time processing"]
     },
     {
-      title: "Instant Results",
-      description: "Get comprehensive skin analysis in seconds with detailed insights and personalized recommendations",
+      title: "fast Results",
+      description: "Get comprehensive skin analysis in minutes with detailed insights ",
       icon: "⚡",
-      details: ["3-second analysis", "Detailed reports", "Progress tracking"]
+      details: [ "Detailed reports"]
     },
     {
-      title: "Professional Grade",
-      description: "Developed with certified dermatologists using medical-grade image analysis technology",
+      title: "pdf download",
+      description: "available in pdf form",
       icon: "👩‍⚕️",
-      details: ["Dermatologist approved", "Clinical validation", "Medical standards"]
+      details: [ "easyily available" ]
     },
     {
-      title: "Complete Privacy",
-      description: "Your skin data is processed locally and encrypted, ensuring complete privacy and security",
+      title: "find dermatologists ",
+      description: "find your dermatologist ",
       icon: "🔒",
-      details: ["Local processing", "Bank-level encryption", "No data storage"]
+      details: ["Local processing"]
     }
   ];
 
@@ -99,10 +99,10 @@ const AISkinScannerInfo = () => {
           {/* Quick Stats */}
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
             {[
-              { value: "95%", label: "Accuracy" },
-              { value: "3s", label: "Analysis Time" },
-              { value: "500K+", label: "Scans Done" },
-              { value: "4.9★", label: "User Rating" }
+              { value: "", label: "" },
+              { value: "", label: "" },
+              { value: "", label: "" },
+              { value: "", label: "" }
             ].map((stat, index) => (
               <div key={index} className="text-center p-4 bg-white/60 rounded-xl backdrop-blur-sm">
                 <div className="text-2xl font-bold text-gray-800">{stat.value}</div>
