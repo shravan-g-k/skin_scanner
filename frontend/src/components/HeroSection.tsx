@@ -15,10 +15,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onStartAnalysisClick }
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-8">
             <div className="space-y-4">
-              <Badge variant="success" className="mb-2">
-                <CheckCircle className="h-3 w-3 mr-1" />
-                FDA Guidelines Compliant
-              </Badge>
               
               <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
                 AI-Powered
@@ -54,16 +50,13 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onStartAnalysisClick }
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4">
+            <div className="mx-auto max-w-sm">
               <Button 
                 size="lg" 
-                className="bg-gradient-to-r from-primary to-accent hover:opacity-90"
+                className="w-full bg-gradient-to-r from-primary to-accent hover:opacity-90"
                 onClick={onStartAnalysisClick} // ✅ call scroll function
               >
                 Start Analysis
-              </Button>
-              <Button variant="outline" size="lg">
-                Learn More
               </Button>
             </div>
 

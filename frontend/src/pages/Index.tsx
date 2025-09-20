@@ -90,7 +90,7 @@ const Index = () => {
       <footer className="bg-card border-t mt-20">
         <div className="container mx-auto px-4 py-8">
           <div className="text-center text-sm text-muted-foreground">
-            <p>© 2024 DermaAI. For educational purposes only. Not a substitute for professional medical advice.</p>
+            <p>© 2024 Skini. For educational purposes only. Not a substitute for professional medical advice.</p>
           </div>
         </div>
       </footer>
